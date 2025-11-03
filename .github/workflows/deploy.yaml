@@ -1,0 +1,23 @@
+name: Deploy-workflow
+
+on: 
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    steps: 
+      - name: SSH & update on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: $${{ secrets.EC2_SSH_KEY }}
+          port: $${{ sercrets.EC2_PORT }}
+          script: |
+            cd SolarSystemPage/
+            git pull
+            sudo cp README.md index.html /var/www/html/
