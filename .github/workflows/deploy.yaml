@@ -5,18 +5,20 @@ on:
     types: [closed]
     branches:
       - main
+      
 jobs:
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps: 
       - name: SSH & update on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: $${{ secrets.EC2_SSH_KEY }}
-          port: $${{ secrets.EC2_PORT }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT }}
           script: |
             cd SolarSystemPage/
             git pull
